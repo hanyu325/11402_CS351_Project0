@@ -1,102 +1,185 @@
 # Two Sum
-## Description
+
+## Project Goal
+
+The goal of this project was to implement the classic Two Sum problem in C++. Given an array of integers and a target value, the program finds two numbers whose sum equals the target and returns their indices.
+
+This project also provided experience with software development workflows, including Jira task management, GitHub branches, Pull Requests, GitHub Actions, and CMake.
+
+---
+
+## Problem Description
 
 Given an array of integers `nums` and an integer `target`, return the indices of the two numbers that add up to the target.
 
-You may assume that each input has exactly one solution, and you cannot use the same element twice.
+You may assume that each input has exactly one solution, and the same element cannot be used twice.
 
-You can return the answer in any order.
+### Example
 
-## Example
+Input:
 
-**Input:** `nums = [2,7,11,15], target = 9`  
-**Output:** `[0,1]`  
-**Explanation:** `nums[0] + nums[1] = 2 + 7 = 9`
+```text
+nums = [2,7,11,15]
+target = 9
+```
+
+Output:
+
+```text
+[0,1]
+```
+
+Explanation:
+
+```text
+nums[0] + nums[1] = 2 + 7 = 9
+```
+
+---
 
 ## Constraints
 
-- `2 <= nums.length <= 10^4`
-- `-10^9 <= nums[i] <= 10^9`
-- `-10^9 <= target <= 10^9`
+* `2 <= nums.length <= 10^4`
+* `-10^9 <= nums[i] <= 10^9`
+* `-10^9 <= target <= 10^9`
 
-## Requirement
+---
 
-**Language:** C++ with STL vector
+## Algorithm Idea
 
-**Two Approaches:**
+Two different approaches were implemented and compared.
 
-1. **TwoSumArray** - Brute force using nested loops
-    - Time Complexity: O(n²)
-    - Space Complexity: O(1)
+### 1. Hash Table Approach
 
-2. **TwoSumHash** - Hash table approach
-    - Time Complexity: O(n)
-    - Space Complexity: O(n)
+The Hash Table solution uses `unordered_map` to store previously visited values and their indices.
 
-### Test Cases
+For each element:
 
-| Input | Target | Expected Output | Description |
-|-------|--------|-----------------|-------------|
-| `[2,7,11,15]` | `9` | `[0,1]` | Basic case |
-| `[3,2,4]` | `6` | `[1,2]` | Different order |
-| `[-1,-2,-3,5,7]` | `12` | `[3,4]` | Negative numbers |
-| `[1000000,1000000]` | `2000000` | `[0,1]` | Large values |
-| `[0,0]` | `0` | `[0,1]` | Edge case with zeros |
+1. Calculate the complement value (`target - nums[i]`).
+2. Check whether the complement already exists in the hash table.
+3. If found, return the two indices.
+4. Otherwise, store the current value and continue.
 
-## Detail about GitHub Actions
+**Time Complexity:** O(n)
 
-GitHub Actions is a CI/CD platform that automates your software workflow directly in your repository. You can set up automated tests, builds, and deployments triggered by events like push, pull request, or schedule.
+**Space Complexity:** O(n)
 
-**Key Features:**
-- **Workflows:** YAML files in `.github/workflows/` that define automation steps
-- **Jobs:** Units of work that run on runners (Ubuntu, Windows, macOS)
-- **Actions:** Reusable units of code that perform specific tasks
-- **Triggers:** Events that start workflow execution (push, pull_request, schedule, etc.)
+---
 
-**Example workflow for C++ testing:**
+### 2. Sorting + Two Pointers Approach
+
+The Array solution stores each number together with its original index.
+
+1. Create value-index pairs.
+2. Sort the pairs by value.
+3. Use two pointers from both ends of the sorted array.
+4. Move pointers according to the current sum until the target is found.
+
+**Time Complexity:** O(n log n)
+
+**Space Complexity:** O(n)
+
+---
+
+## Development Process
+
+1. Created Jira issues for project planning and implementation.
+2. Created feature branches using Jira Issue Keys.
+3. Implemented the Two Sum algorithms.
+4. Added test cases for validation.
+5. Configured CMake for project building.
+6. Committed and pushed changes to GitHub.
+7. Created Pull Requests for code integration.
+8. Verified GitHub Actions checks.
+9. Merged approved Pull Requests into the main branch.
+
+---
+
+## Test Cases
+
+| Input             | Target  | Expected Output |
+| ----------------- | ------- | --------------- |
+| [2,7,11,15]       | 9       | [0,1]           |
+| [3,2,4]           | 6       | [1,2]           |
+| [-1,-2,-3,5,7]    | 12      | [3,4]           |
+| [1000000,1000000] | 2000000 | [0,1]           |
+| [0,0]             | 0       | [0,1]           |
+
+### Testing Result
+
+All test cases passed successfully for both implementations.
+
+The program correctly handled:
+
+* Normal cases
+* Different index orders
+* Negative numbers
+* Large integer values
+* Edge cases with duplicate values
+
+---
+
+## GitHub Actions
+
+GitHub Actions was used to automate testing and verification whenever code was pushed or a Pull Request was created.
+
+### Benefits
+
+* Automatically builds the project
+* Runs tests after each change
+* Detects errors early
+* Ensures code quality before merging
+
+### Workflow Trigger
+
 ```yaml
-name: C++ Tests
-on: [push, pull_request]
-jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - name: Compile
-                run: g++ -o twosum twosum.cpp
-            - name: Run tests
-                run: ./twosum
+on:
+  - push
+  - pull_request
 ```
 
-This setup would automatically compile and test your Two Sum solutions on every push or pull request.
+This workflow automatically executes whenever code is pushed or a Pull Request is created.
 
-### Using CMake
+---
 
-CMake is a build system generator that simplifies compiling C++ projects. Create a `CMakeLists.txt` file in your project root:
+## Using CMake
 
-```cmake
-cmake_minimum_required(VERSION 3.10)
-project(TwoSum)
+CMake was used as the build system for this project.
 
-set(CMAKE_CXX_STANDARD 17)
+### Benefits
 
-add_executable(twosum twosum.cpp)
+* Simplifies project compilation
+* Supports multiple operating systems
+* Integrates easily with GitHub Actions
+* Provides a consistent build process
+
+### Basic Workflow
+
+```text
+mkdir build
+cd build
+cmake ..
+cmake --build .
 ```
 
-**Basic workflow:**
-1. Create a build directory: `mkdir build && cd build`
-2. Generate build files: `cmake ..`
-3. Compile: `cmake --build .`
-4. Run: `./twosum` (or `twosum.exe` on Windows)
+CMake automatically generates the required build files and compiles the project.
 
-**For GitHub Actions integration, update the workflow:**
-```yaml
-- name: Configure
-    run: cmake -B build
-- name: Build
-    run: cmake --build build
-- name: Run tests
-    run: ./build/twosum
-```
+---
 
-CMake handles platform differences automatically, making your project portable across operating systems.
+## Project Highlights
+
+* Implemented and compared two algorithm approaches.
+* Practiced GitHub Flow using feature branches and Pull Requests.
+* Used Jira for task planning and progress tracking.
+* Integrated GitHub Actions for automated testing.
+* Used CMake for project building and management.
+
+---
+
+## Learning Reflection
+
+Through this project, I learned how to manage a software project using Jira and GitHub instead of only focusing on coding.
+
+I practiced creating feature branches, committing changes, creating Pull Requests, and merging code into the main branch. I also learned how GitHub Actions can automatically test code and how CMake simplifies building C++ projects.
+
+This project helped me better understand a complete software development workflow and improved my experience with AI-assisted software development tools.
