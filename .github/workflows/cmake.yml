@@ -1,0 +1,33 @@
+# .github/workflows/cmake.yml
+name: CMake Build and Test
+
+# 設定觸發條件：當推送到 main 分支，或發起 Pull Request 時觸發
+on:
+  push:
+    branches: [ "main" ] # 如果你的預設分支叫 master，請改為 master
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    # 使用最新的 Ubuntu 環境來跑測試
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. 下載你的程式碼到虛擬環境
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # 2. 設定 CMake
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
+
+    # 3. 編譯程式碼
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Release
+
+    # 4. 執行 CTest 測試
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      # --output-on-failure 會在測試失敗時印出詳細的錯誤訊息
+      run: ctest -C Release --output-on-failure
